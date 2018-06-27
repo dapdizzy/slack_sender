@@ -24,5 +24,8 @@ defmodule SlackSenderWeb.Router do
     pipe_through :api
 
     post "/slack_sender", SlackSenderController, :send
+    post "/slack_receiver", SlackSenderController, :receive
+    post "/supervisor_registration", SlackSenderController, :register
+
   end
 end

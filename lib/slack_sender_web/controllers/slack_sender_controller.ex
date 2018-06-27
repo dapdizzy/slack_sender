@@ -9,4 +9,19 @@ defmodule SlackSenderWeb.SlackSenderController do
     IO.puts "Message [#{message}] has been sent to queue [#{working_queue}]"
     json conn, %{sent: true}
   end
+
+  def receive(conn, params) do
+    topics = params["topics"]
+    identity = params["identity"]
+    IO.puts "Topics: #{inspect topics}, identity: #{identity}"
+    messages = MessagesReceiver.get_messages_for(topics, identity)
+    json conn, %{messages: messages}
+  end
+
+  def register(conn, params) do
+    identity = params["identity"]
+    topics = params["topics"]
+    topics |> Enum.each(fn topic -> topic |> SubscriptionManager.add_subscriber(identity) end)
+    json conn, %{registered: identity}
+  end
 end

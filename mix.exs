@@ -41,7 +41,8 @@ defmodule SlackSender.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
-      {:rabbitmq_sender, "~> 0.1.4", runtime: false}
+      {:rabbitmq_sender, "~> 0.1.4", runtime: false},
+      {:rabbitmq_receiver, "~> 0.1.6", runtime: false}
     ]
   end
 

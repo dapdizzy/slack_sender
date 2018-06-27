@@ -6,6 +6,8 @@ defmodule SlackSender.Application do
   def start(_type, _args) do
     import Supervisor.Spec
 
+    rabbit_options = Application.get_env(:rabbitmq_sender, :rabbit_options)
+
     # Define workers and child supervisors to be supervised
     children = [
       # Start the Ecto repository
@@ -13,6 +15,9 @@ defmodule SlackSender.Application do
       # Start the endpoint when the application starts
       supervisor(SlackSenderWeb.Endpoint, []),
       worker(RabbitMQSender, [[], [name: RabbitMQSender]]),
+      worker(RabbitMQReceiver, [rabbit_options, "", MessagesReceiver, :accept_message, true, [name: RabbitMQCommandReceiver], [exchange: "supervisors_commands_exchange", exchange_type: :topic, binding_keys: ["commands", "commands.#"], rpc_mode: true]]),
+      worker(SubscriptionManager, []),
+      worker(MessagesReceiver, [])
       # Start your own worker by calling: SlackSender.Worker.start_link(arg1, arg2, arg3)
       # worker(SlackSender.Worker, [arg1, arg2, arg3]),
     ]
