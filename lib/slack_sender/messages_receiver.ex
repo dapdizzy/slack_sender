@@ -37,7 +37,12 @@ defmodule MessagesReceiver do
   defp get_messages_and_remaining_entries(map, topic, identity) do
     IO.puts "Getting messages by #{topic} for #{identity}"
     entries = map[topic]
-    messages = if entries, do: entries |> Enum.map(fn {message, _} -> message end), else: []
+    messages =
+      if entries,
+      do: entries
+        |> Stream.filter(fn {_message, subscribers} ->
+          subscribers && subscribers |> MapSet.member?(identity)
+        end) |> Enum.map(fn {message, _} -> message end), else: []
     remaining_entries =
       if entries do
         entries |> Enum.map(fn {message, subscribers} ->

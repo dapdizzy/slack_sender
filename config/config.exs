@@ -31,7 +31,8 @@ config :rabbitmq_sender,
     virtual_host: "/",
     password: "hunky"
   ],
-  working_queue: "bot_queue"
+  working_queue: "bot_queue",
+  command_queue: "bot_instruction_queue"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
